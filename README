@@ -1,0 +1,16 @@
+secauth is a protocol for authentication.
+
+It is not a secure alternative to encrypted
+communcation, nor is it a password hashing algorithm,
+but is used between the two.
+
+If used correctly, secauth ensures the server owner,
+or someone with access to the server, does not get
+access to the user's plain-text password. It also
+gives the user a lower bound for the security with
+which the server is treating the password.
+
+Additionally, if an attacker breaks the communication
+encryption, he will not access to the user's plain-text
+password and the information he gets access to is not
+reusable.

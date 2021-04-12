@@ -25,5 +25,5 @@ libsecauth_format_spec(struct libsecauth_spec *spec, char *buffer, size_t buffer
 	             client_rounds, server_rounds,
 	             spec->posthash ? "{$" : "", spec->posthash ? spec->posthash : "", spec->posthash ? "$}" : "",
 	             expected_with_dollars ? "{$" : "", spec->expected ? spec->expected : "" , expected_with_dollars ? "$}" : "");
-	return i > 0 ? (size_t)i : 0;
+	return i > 0 ? (size_t)(i + 1) : 0;
 }

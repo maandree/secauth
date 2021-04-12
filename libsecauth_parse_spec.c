@@ -14,6 +14,7 @@ get_subhash(char *s, char **endp)
 
 	if (s[0] == '{' && s[1] == '$') {
 		s = ret = &s[2];
+		depth += 1;
 	} else {
 		ret = s;
 	}
@@ -24,12 +25,15 @@ get_subhash(char *s, char **endp)
 			if (!depth)
 				return NULL;
 			if (!--depth) {
+				s[-1] = '\0';
 				*s++ = '\0';
 				*s++ = '\0';
+				*endp = s;
 				return ret;
 			}
 		} else if (s[0] == '$' && !depth) {
 			*s++ = '\0';
+			*endp = s;
 			return ret;
 		}
 	}
@@ -53,6 +57,7 @@ libsecauth_parse_spec(struct libsecauth_spec *spec, char *s)
 {
 	const char *client_rounds, *server_rounds;
 	size_t slen = strlen(s);
+	char *sorig = s;
 
 	memset(spec, 0, sizeof(*spec));
 
@@ -65,20 +70,20 @@ libsecauth_parse_spec(struct libsecauth_spec *spec, char *s)
 	client_rounds  = get_subhash(s, &s);
 	server_rounds  = get_subhash(s, &s);
 	spec->posthash = get_subhash(s, &s);
-	spec->expected = get_subhash(s, &s);
+	spec->expected = s;
 
 	if (client_rounds && strtou32(client_rounds, &spec->client_rounds))
 		goto invalid;
 	if (server_rounds && strtou32(server_rounds, &spec->server_rounds))
 		goto invalid;
 
-	if (*s)
+	if (strchr(s, '$'))
 		goto invalid;
 
 	return 0;
 
 invalid:
-	memset(s, 0, slen);
+	memset(sorig, 0, slen);
 	errno = EINVAL;
 	return -1;
 }

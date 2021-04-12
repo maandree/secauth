@@ -15,7 +15,8 @@ libsecauth_server_hash(const struct libsecauth_spec *spec, const char *inhash, c
 	uint32_t rounds;
 	size_t i = 0;
 
-	*resultp = NULL;
+	if (resultp)
+		*resultp = NULL;
 	memset(hashbuf, 0, sizeof(hashbuf));
 
 	for (i = 0, rounds = spec->server_rounds; rounds--; i ^= 1) {

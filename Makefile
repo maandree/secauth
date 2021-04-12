@@ -25,11 +25,17 @@ OBJ =\
 HDR =\
 	libsecauth.h
 
+BIN =\
+	demo-setup\
+	demo-login
+
 LOBJ = $(OBJ:.o=.lo)
 
 
-all: libsecauth.a libsecauth.$(LIBEXT)
+all: libsecauth.a libsecauth.$(LIBEXT) $(BIN)
 $(OBJ): $($@:.o=.c) $(HDR)
+demo-setup.o: demo-setup.c $(HDR)
+demo-login.o: demo-login.c $(HDR)
 
 libsecauth.a: $(OBJ)
 	-rm -f -- $@
@@ -44,6 +50,12 @@ libsecauth.$(LIBEXT): $(LOBJ)
 
 .c.lo:
 	$(CC) -fPIC -c -o $@ $< $(CFLAGS) $(CPPFLAGS)
+
+demo-setup: demo-setup.o libsecauth.a
+	$(CC) -o $@ demo-setup.o libsecauth.a $(LDFLAGS)
+
+demo-login: demo-login.o libsecauth.a
+	$(CC) -o $@ demo-login.o libsecauth.a $(LDFLAGS)
 
 install: libsecauth.a libsecauth.$(LIBEXT)
 	mkdir -p -- "$(DESTDIR)$(PREFIX)/lib"
@@ -62,7 +74,7 @@ uninstall:
 	-rm -f -- "$(DESTDIR)$(PREFIX)/include/libsecauth.h"
 
 clean:
-	-rm -rf -- *.o *.a *.so *.lo *.su *.dll *.dylib
+	-rm -rf -- *.o *.a *.so *.lo *.su *.dll *.dylib democonfig $(BIN)
 
 .SUFFIXES:
 .SUFFIXES: .c .o .lo

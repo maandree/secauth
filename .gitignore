@@ -7,3 +7,6 @@
 *.su
 *.dll
 *.dylib
+/democonfig
+/demo-setup
+/demo-login

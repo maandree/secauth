@@ -14,3 +14,7 @@ Additionally, if an attacker breaks the communication
 encryption, he will not access to the user's plain-text
 password and the information he gets access to is not
 reusable.
+
+(The configurations in the demos are in no way
+recommended, they are just simple and weak (fast)
+enough to run in valgrind(1).)

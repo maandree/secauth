@@ -11,7 +11,7 @@ libsecauth_server_hash(const struct libsecauth_spec *spec, const char *inhash, c
 {
 	struct crypt_data hashbuf[2];
 	const char *hash = inhash, *result;
-	char *posthash = NULL, *p;
+	char *pepperedhash = NULL;
 	uint32_t rounds;
 	size_t i = 0;
 
@@ -26,17 +26,15 @@ libsecauth_server_hash(const struct libsecauth_spec *spec, const char *inhash, c
 	}
 
 	if (pepper) {
-		posthash = malloc(strlen(spec->posthash) + strlen(pepper) + 2);
-		if (!posthash)
+		pepperedhash = malloc(strlen(pepper) + strlen(hash) + 1);
+		if (!pepperedhash)
 			return -1;
-		p = stpcpy(posthash, spec->posthash);
-		if (*posthash && p[-1] == '$')
-			p -= 1;
-		stpcpy(p, pepper);
+		stpcpy(stpcpy(pepperedhash, pepper), hash);
+		hash = pepperedhash;
 	}
 
-	hash = crypt_r(hash, posthash ? posthash : spec->posthash, &hashbuf[i]);
-	free(posthash);
+	hash = crypt_r(hash, spec->posthash, &hashbuf[i]);
+	free(pepperedhash);
 	if (!hash)
 		return -1;
 

@@ -16,5 +16,5 @@ password and the information he gets access to is not
 reusable.
 
 (The configurations in the demos are in no way
-recommended, they are just simple and weak (fast)
+recommended, they are just portable and weak (fast)
 enough to run in valgrind(1).)
